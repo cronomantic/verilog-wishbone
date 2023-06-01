@@ -70,8 +70,8 @@ assign ack_o = ack_o_reg;
 integer i, j, k;
 
 initial begin
-    if (INITIAL_HEX != "")
-        $readmemh(INITIAL_HEX, mem);
+    if (FILE_INIT != "")
+        $readmemh(FILE_INIT, mem);
     else for (k = 0 ; k < (2**VALID_ADDR_WIDTH); k = k + 1) begin : INIT_RAM
         mem[k] = 0;
     end
