@@ -31,8 +31,9 @@ THE SOFTWARE.
  */
 module wb_ram #
 (
-    parameter DATA_WIDTH = 32,              // width of data bus in bits (8, 16, 32, or 64)
     parameter ADDR_WIDTH = 16,              // width of address bus in bits
+    parameter DATA_WIDTH = 32,              // width of data bus in bits (8, 16, 32, or 64)
+    parameter FILE_INIT = "",
     parameter SELECT_WIDTH = (DATA_WIDTH/8) // width of word select bus (1, 2, 4, or 8)
 )
 (
@@ -66,7 +67,15 @@ wire [VALID_ADDR_WIDTH-1:0] adr_i_valid = adr_i >> (ADDR_WIDTH - VALID_ADDR_WIDT
 assign dat_o = dat_o_reg;
 assign ack_o = ack_o_reg;
 
-integer i, j;
+integer i, j, k;
+
+initial begin
+    if (INITIAL_HEX != "")
+        $readmemh(INITIAL_HEX, mem);
+    else for (k = 0 ; k < (2**VALID_ADDR_WIDTH); k = k + 1) begin : INIT_RAM
+        mem[k] = 0;
+    end
+end
 
 initial begin
     // two nested loops for smaller number of iterations per loop
