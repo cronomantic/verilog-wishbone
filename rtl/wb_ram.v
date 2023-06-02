@@ -67,17 +67,12 @@ wire [VALID_ADDR_WIDTH-1:0] adr_i_valid = adr_i >> (ADDR_WIDTH - VALID_ADDR_WIDT
 assign dat_o = dat_o_reg;
 assign ack_o = ack_o_reg;
 
-integer i, j, k;
+integer i, j;
 
 initial begin
     if (FILE_INIT != "")
-        $readmemh(FILE_INIT, mem);
-    else for (k = 0 ; k < (2**VALID_ADDR_WIDTH); k = k + 1) begin : INIT_RAM
-        mem[k] = 0;
-    end
-end
-
-initial begin
+        $readmemh(FILE_INIT, mem, 0, (2**VALID_ADDR_WIDTH)-1);
+    else
     // two nested loops for smaller number of iterations per loop
     // workaround for synthesizer complaints about large loop counts
     for (i = 0; i < 2**VALID_ADDR_WIDTH; i = i + 2**(VALID_ADDR_WIDTH/2)) begin
